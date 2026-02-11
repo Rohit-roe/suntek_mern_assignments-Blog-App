@@ -1,0 +1,8 @@
+protected route
+when a request is made
+1. post request is made by the client from thr login route
+2.store token in cookie storage
+3.login response to the client
+4.check cookie storage
+5.read token
+6.request with token this will be done in the protected route whih will check the token
