@@ -7,8 +7,8 @@ function App() {
     <div>
       <div className='m-auto'>
         {/* <Register/> */}
-        {/* <Login/> */}
-        <AddArticle />
+        <Login/>
+        {/* <AddArticle /> */}
       </div>
     </div>
   )
