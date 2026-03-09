@@ -1,17 +1,32 @@
 import Register from './components/Register'
 import Login from './components/Login'
 import AddArticle from './components/AddArticle'
+import {createBrowserRouter,RouterProvider} from 'react-router'
+import RootLayout from './components/RootLayout'
+import Home from './components/Home'
 
 function App() {
-  return (
-    <div>
-      <div className='m-auto'>
-        {/* <Register/> */}
-        <Login/>
-        {/* <AddArticle /> */}
-      </div>
-    </div>
-  )
+  const routerObj = createBrowserRouter([
+    {
+      path:"/",
+      element:<RootLayout />,
+      children:[
+        {
+          path:'',
+          element:<Home />
+        },
+        {
+          path:'register',
+          element:<Register />
+        },
+        {
+          path:'login',
+          element:<Login />
+        },
+      ]
+    }
+  ])
+  return <RouterProvider router={routerObj} />
 }
 
 export default App

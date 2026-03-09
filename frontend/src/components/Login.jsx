@@ -7,10 +7,10 @@ function Login() {
     console.log(formObj)
   }
   return (
-    <div>
-      <div className='min-h-screen flex flex-col items-center justify-center'>
-        <h1 className='text-2xl text-center font-bold'>Login</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className='p-10 rounded-lg max-w-lg shadow-lg'>
+    <div className=''>
+      <div className='min-h-screen flex flex-col items-center justify-center '>
+        <h1 className='text-2xl text-center font-bold my-5'>Login</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className='p-10 rounded-lg max-w-lg w-full shadow-lg border border-gray-200 bg-white'>
           {/* role */}
           <div className='flex gap-6 justify-items-end items-center '>
             <h2 className='text-xl'>Select Your Role: </h2>

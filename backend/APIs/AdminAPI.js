@@ -2,11 +2,10 @@ import exp from 'express'
 import { verifyToken } from '../middlewares/verifyToken.js'
 import { ArticleModel } from '../models/ArticleModel.js'
 import { UserTypeModel } from '../models/UserModel.js'
-import {checkAdmin} from '../middlewares/checkAdmin.js'
 export const adminRoute=exp.Router()
 
 // read all articles
-adminRoute.get('/articles/:adminId',verifyToken,async(req,res)=>{
+adminRoute.get('/articles/:adminId',verifyToken("ADMIN"),async(req,res)=>{
     // get the userid from the req
     let user=req.params.adminId
     // if(!user){
@@ -25,7 +24,7 @@ adminRoute.get('/articles/:adminId',verifyToken,async(req,res)=>{
     res.status(200).json({message:"the article is :",payload:allArticles})
 })
 // Block the users
-adminRoute.put('/block/:userId',verifyToken,checkAdmin,async(req,res)=>{
+adminRoute.put('/block/:userId',verifyToken("ADMIN"),async(req,res)=>{
     let userId=req.params.userId
     let user=await UserTypeModel.findById(userId)
     if(!user ){
@@ -39,7 +38,7 @@ adminRoute.put('/block/:userId',verifyToken,checkAdmin,async(req,res)=>{
 })
 
 // unblocking the blocked users
-adminRoute.put('/unblock/:userId',verifyToken,checkAdmin,async(req,res)=>{
+adminRoute.put('/unblock/:userId',verifyToken("ADMIN"),async(req,res)=>{
     let userId=req.params.userId
     let user=await UserTypeModel.findById(userId)
     if(!user ){
