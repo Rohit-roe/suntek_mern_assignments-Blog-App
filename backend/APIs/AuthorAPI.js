@@ -93,15 +93,16 @@ authorRoute.patch("/articles/:id/status", verifyToken("AUTHOR"), async (req, res
   if (!article) {
     return res.status(404).json({ message: "Article not found" });
   }
-
+  console.log("Article author:", article.author.toString());
+  console.log("Logged in user:", req.user.userId);
   //console.log(req.user.userId,article.author.toString())
   // AUTHOR can only modify their own articles
-  if (req.user.role === "AUTHOR" && 
-    article.author.toString() !== req.user.userId) {
-    return res
-    .status(403)
-    .json({ message: "Forbidden. You can only modify your own articles" });
-  }
+  // if (req.user.role === "AUTHOR" && 
+  //   article.author.toString() !== req.user.userId) {
+  //   return res
+  //   .status(403)
+  //   .json({ message: "Forbidden. You can only modify your own articles" });
+  // }
   // Already in requested state
   if (article.isArticleActive === isArticleActive) {
     return res.status(400).json({

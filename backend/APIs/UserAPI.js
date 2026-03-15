@@ -17,7 +17,7 @@ userRoute.post('/users',async(req,res)=>{
 // authenticate user
 
 // read all articles(protected)
-userRoute.get('/articles/:userid',verifyToken("USER"),async(req,res)=>{
+userRoute.get('/articles',verifyToken("USER"),async(req,res)=>{
     // get the userid from the req
     let user=req.params.userid
     // if(!user){

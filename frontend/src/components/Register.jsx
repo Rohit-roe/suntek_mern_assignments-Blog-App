@@ -1,85 +1,157 @@
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
+import {
+  pageBackground,
+  formCard,
+  formTitle,
+  formGroup,
+  labelClass,
+  inputClass,
+  submitBtn,
+  errorClass,
+  mutedText,
+  divider,
+  loadingClass,
+} from "../styles/common";
+import { NavLink } from "react-router";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router";
 
 function Register() {
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  //const []=useState()
 
-  const onSubmit = (formObj) => {
-    console.log(formObj)
+  const onUserRegister = async (newUser) => {
+    setLoading(true);
+    try {
+      let { role, ...userObj } = newUser;
+
+      if (role === "user") {
+        //make API req to user-api
+        let resObj = await axios.post("http://localhost:4000/user-api/users", userObj);
+        if (resObj.status === 201) {
+          //navigate to login
+          navigate("/login");
+        }
+      }
+      if (role === "author") {
+        //make API req to author-api
+        //make API req to user-api
+        let resObj = await axios.post("http://localhost:4000/author-api/users", userObj);
+        console.log("res obj is ", resObj);
+        if (resObj.status === 201) {
+          //navigate to login
+          navigate("/login");
+        }
+      }
+    } catch (err) {
+     // console.log("err is ", err);
+      setError(err.response?.data?.error || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //loading
+  if (loading === true) {
+    return <p className={loadingClass}></p>;
   }
+
   return (
-    <div>
-      <div className='min-h-screen flex flex-col items-center justify-center'>
-        <h1 className='text-2xl text-center font-bold my-5'>Register to Our App</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className='p-10 rounded-lg max-w-lg w-full shadow-lg border border-gray-200 bg-white'>
-          {/* role */}
-          <div className='flex gap-6 justify-items-end items-center '>
-            <h2 className='text-xl'>Select Your Role: </h2>
-            <label>
-              <input type="radio" value="user" {...register("role", { required: "Role is required" })} />
-              <span className="ml-2">User</span>
-            </label>
-            <label>
-              <input type="radio" value="author" {...register("role", { required: "Role is required" })} />
-              <span className="ml-2">Author</span>
-            </label>
-          </div>
-          {
-            errors.role && (<p className='text-red-500 text-sm'>{errors.role.message}</p>)
-          }
-          <div className='flex justify-even mt-5 gap-4'>
-            <div className='w-1/2'>
-              {/* first name */}
-              <input type="text" placeholder='enter your first name'
-                {...register("firstName", { required: "First Name is required" })}
-                className='border rounded p-2 w-full'
-              />
-              {
-                errors.firstName && (<p className='text-red-500 text-sm'>{errors.firstName.message}</p>)
-              }
-            </div>
-            <div className='w-1/2'>
-              {/* first name */}
-              <input type="text" placeholder='enter your last name'
-                {...register("lastName", { required: "Last Name is required" })}
-                className='border rounded p-2 w-full'
-              />
-              {
-                errors.lastName && (<p className='text-red-500 text-sm'>{errors.lastName.message}</p>)
-              }
+    <div className={`${pageBackground} flex items-center justify-center py-16 px-4`}>
+      <div className={formCard}>
+        {/* Title */}
+        <h2 className={formTitle}>Create an Account</h2>
+        {/* error message */}
+        {error && <p className={errorClass}>{error}</p>}
+        <form onSubmit={handleSubmit(onUserRegister)}>
+          {/* Role Selection */}
+          <div className="mb-5">
+            <p className={labelClass}>Register as</p>
+            <div className="flex gap-6 mt-1">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("role")}
+                  id="user"
+                  value="user"
+                  className="accent-violet-600 w-4 h-4"
+                />
+                <span className="text-sm text-stone-700 font-medium">User</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  {...register("role")}
+                  id="author"
+                  value="author"
+                  className="accent-violet-600 w-4 h-4"
+                />
+                <span className="text-sm text-stone-700 font-medium">Author</span>
+              </label>
             </div>
           </div>
-          {/* email */}
-          <input type="email" placeholder='enter your email'
-            {...register("email", { required: "email is required(so that we can spam you! jk)" })}
-            className='border rounded w-full mt-5 p-2'
-          />
-          {
-            errors.email && (<p className='text-red-500'>{errors.email.message}</p>)
-          }
-          {/* password */}
-          <input type="password" placeholder='enter your password'
-            {...register("password", { required: "password is required", minLength: { value: 6, message: "Minimum 6 characters" } })}
-            className='border rounded w-full mt-5 p-2'
-          />
-          {
-            errors.password && (<p className='text-red-500'>{errors.password.message}</p>)
-          }
-          {/* profile image link upload */}
-          <input type="file" placeholder='place your profile pic image here'
-            className='border rounded w-full mt-5 p-2'
-            {...register("profile", { required: "Profile Image is required" })}
-          />
-          {
-            errors.profile && (<p className='text-red-500'>{errors.profile.message}</p>)
-          }
-          {/* submit button */}
-          <div className='flex justify-center'>
-            <button className='bg-blue-400 text-white rounded mt-5 px-7 py-2'>Register</button>
+
+          <div className={divider} />
+
+          {/* First & Last Name — side by side */}
+          <div className="sm:flex gap-4 mb-4">
+            <div className="flex-1">
+              <label className={labelClass}>First Name</label>
+              <input type="text" {...register("firstName")} placeholder="First name" className={inputClass} />
+            </div>
+            <div className="flex-1">
+              <label className={labelClass}>Last Name</label>
+              <input type="text" {...register("lastName")} placeholder="Last name" className={inputClass} />
+            </div>
           </div>
+
+          {/* Email */}
+          <div className={formGroup}>
+            <label className={labelClass}>Email</label>
+            <input type="email" {...register("email")} placeholder="you@example.com" className={inputClass} />
+          </div>
+
+          {/* Password */}
+          <div className={formGroup}>
+            <label className={labelClass}>Password</label>
+            <input type="password" {...register("password")} placeholder="Min. 8 characters" className={inputClass} />
+          </div>
+
+          {/* Profile Image URL */}
+          <div className={formGroup}>
+            <label className={labelClass}>Profile Image URL</label>
+            <input
+              type="text"
+              {...register("profileImageUrl")}
+              placeholder="https://example.com/avatar.png"
+              className={inputClass}
+            />
+          </div>
+
+          {/* Submit */}
+          <button type="submit" className={submitBtn}>
+            Create Account
+          </button>
         </form>
+
+        {/* Footer note */}
+        <p className={`${mutedText} text-center mt-5`}>
+          Already have an account?{" "}
+          <NavLink to="/login" className="text-violet-600 hover:text-violet-500 font-medium">
+            Sign in
+          </NavLink>
+        </p>
       </div>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;
+
+
+//res.data
+//err.response.
