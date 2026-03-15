@@ -1,16 +1,37 @@
-# React + Vite
+### Using Toast in React app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    - npm install react-hot-toast
+    - Add Toaser component at Root
+        <Toaster position="top-center" reverseOrder={false} /> in App.jsx
 
-Currently, two official plugins are available:
+    - Use toast with custom messages
+        Eg:
+            import toast from "react-hot-toast";
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+            if (resObj.status === 201) {
+                toast.success("Account created successfully");
+                navigate("/login");
+            }
 
-## React Compiler
+### From UserProfile component,
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    - Read articles of all AUthors
+    - Display them in the form of Grid of cards
+                1 card for extra  small
+                2 cards for small
+                3 cards for medium
+                4 cards from large screen onwards
 
-## Expanding the ESLint configuration
+### From AuthorProfile component,
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    - Read articles of his own
+    - Display them in the form of Grid of cards
+                1 card for extra  small
+                2 cards for small
+                3 cards for medium
+                4 cards from large screen onwards
+
+### When User /Author click on specific article from Articles list
+
+    - Navigate to "ArticleByID" component along with selected article
+    - Display the  article title, category, content along with author title & time stamps in IST format

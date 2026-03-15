@@ -1,56 +1,48 @@
-import exp from 'express'
-import {register,authenticate} from '../services/authService.js'
-import { UserTypeModel } from '../models/UserModel.js'
-import { verifyToken } from '../middlewares/verifyToken.js'
-import { ArticleModel } from '../models/ArticleModel.js'
-export const userRoute=exp.Router()
+import exp from "express";
+import { register, authenticate } from "../services/authService.js";
+import { ArticleModel } from "../models/ArticleModel.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
-// register user
-userRoute.post('/users',async(req,res)=>{
-    // get user obj from req
-    let userObj=req.body
-    // register
-    const newUserObj=await register({...userObj,role:"USER"})
-    // send res
-    res.status(201).json({message:"user created",payload:newUserObj})
-})
-// authenticate user
+export const userRoute = exp.Router();
 
-// read all articles(protected)
-userRoute.get('/articles',verifyToken("USER"),async(req,res)=>{
-    // get the userid from the req
-    let user=req.params.userid
-    // if(!user){
-    //     return res.status(401).json({message:"Invalid user"})
-    // }
-    //    // if author found but role is diff
-    // if(user.role!='USER'){
-    //     return res.status(403).json({message:"role is not an user"})
-    // }
-    // // check if author is active
-    // if(!user.isActive){
-    //     return res.status(403).json({message:"User account is not active"})
-    // }
-    let allArticles=await ArticleModel.find({isArticleActive:true})
+//Register user
+userRoute.post("/users", async (req, res) => {
+  //get user obj from req
+  let userObj = req.body;
+  //call register
+  const newUserObj = await register({ ...userObj, role: "USER" });
+  //send res
+  res.status(201).json({ message: "user created", payload: newUserObj });
+});
 
-    res.status(200).json({message:"the article is :",payload:allArticles})
-})
-// add comment to the user
-userRoute.put('/articles',verifyToken("USER"),async(req,res)=>{
-    // get the details from req
-    let {userId,articleId,comments}=req.body
-    // check user
-    if(userId!=req.user.userId){
-        res.status(403).json({message:"Forbidden"})
-    }
-    // update the article
-    let updatedArticle=await ArticleModel.findByIdAndUpdate({articleId,isArticleActive:true},{$push:{comments:{user:userId,comment:comments}}},
-        {new:true,runValidators:true})
+//Read all articles(protected route)
+userRoute.get("/articles", verifyToken("USER"), async (req, res) => {
+  //read articles of all authors which are active
+  const articles = await ArticleModel.find({ isArticleActive: true });
+  //send res
+  res.status(200).json({ message: "all articles", payload: articles });
+});
 
-    // if article not found
-    if(!updatedArticle){
-       return res.status(401).json({message:"article not found"})
-    }
-    // send the response
-    res.status(200).json({message:"article updated",payload:updatedArticle})
-})
+//Add comment to an article(protected route)
+userRoute.put("/articles", verifyToken("USER"), async (req, res) => {
+  //get comment obj from req
+  const { user, articleId, comment } = req.body;
+  //check user(req.user)
+  console.log(req.user);
+  if (user !== req.user.userId) {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+  //find artcleby id and update
+  let articleWithComment = await ArticleModel.findOneAndUpdate(
+    { _id: articleId, isArticleActive: true },
+    { $push: { comments: { user, comment } } },
+    { new: true, runValidators: true },
+  );
+
+  //if article not found
+  if (!articleWithComment) {
+    return res.status(404).json({ message: "Article not found" });
+  }
+  //send res
+  res.status(200).json({ message: "comment added successfully", payload: articleWithComment });
+});

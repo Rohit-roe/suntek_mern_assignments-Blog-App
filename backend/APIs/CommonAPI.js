@@ -1,57 +1,60 @@
-import exp from 'express'
-import { authenticate } from '../services/authService.js'
-import { verifyToken } from '../middlewares/verifyToken.js'
-import { UserTypeModel } from '../models/UserModel.js'
-import bcrypt from 'bcryptjs'
-export const commonRoute=exp.Router()
+import exp from "express";
+import { authenticate } from "../services/authService.js";
+import { UserTypeModel } from "../models/UserModel.js";
+import bcrypt from "bcryptjs";
+export const commonRouter = exp.Router();
 
-// login
-commonRoute.post('/authenticate',async(req,res)=>{
-    // get user cred object
-    let userCred=req.body
-    // call the authenticate service
-    let {token,user}=await authenticate(userCred)
-    // save token as http only cookie
-    res.cookie("token",token,{
-        httpOnly:true,
-        sameSite:"lax",
-        secure:false
-    })
-    // send response
-    res.status(200).json({message:"login successful",payload:user})
-})
+//login
+commonRouter.post("/login", async (req, res) => {
+  //get user cred object
+  let userCred = req.body;
+  //call authenticate service
+  let { token, user } = await authenticate(userCred);
+  //save tokan as httpOnly cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
+  //send res
+  res.status(200).json({ message: "login success", payload: user });
+});
 
-// logout
-commonRoute.get('/logout',(req,res)=>{
-    // clear the cookie named 'token'
-    res.clearCookie('token',{
-        httpOnly:true,
-        secure:false,
-        sameSite:'lax'
-    })
-    res.status(200).json({message:"successfully logged out"})
-})
+//logout for User, Author and Admin
+commonRouter.get("/logout", (req, res) => {
+  // Clear the cookie named 'token'
+  res.clearCookie("token", {
+    httpOnly: true, // Must match original  settings
+    secure: false, // Must match original  settings
+    sameSite: "lax", // Must match original  settings
+  });
 
-// changing the password
-commonRoute.put('/change-password',verifyToken,async(req,res)=>{
-    // get the current and new password
-    let {userId,email,password,newPassword}=req.body
-    let user=await UserTypeModel.findOne({email})
-    if(!user){
-        res.status(401).json({message:"user is not present"})
-    }
-    // verify whether the current password given is correct
-    let verifyPassword=await bcrypt.compare(password,user.password)
-    if(!verifyPassword){
-        res.status(401).json({message:"The given password is incorrect"})
-    }
-    // replace the current password with new one
-    user.password=await bcrypt.hash(newPassword,10)
-    const created =await user.save()
-    // convert the document to new Object to remove old password
-    const newUserObj=created.toObject()
-    // delete the old password
-    delete newUserObj.password
-    // send the result
-    res.status(200).json({message:"password changed successfully"})
-})
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
+//Change password(Protected route)
+commonRouter.put("/change-password", async (req, res) => {
+  //get current password and new password
+  const { role, email, currentPassword, newPassword } = req.body;
+  // Prevent same password
+  if (currentPassword === newPassword) {
+    return res.status(400).json({ message: "newPassword must be different from currentPassword" });
+  }
+
+  // Find user by email (works for USER, AUTHOR, ADMIN — all same collection)
+  const account = await UserTypeModel.findOne({ email });
+  if (!account) {
+    return res.status(404).json({ message: "Account not found" });
+  }
+
+  // Verify current password
+  const isMatch = await bcrypt.compare(currentPassword, account.password);
+  if (!isMatch) {
+    return res.status(401).json({ message: "Current password is incorrect" });
+  }
+  // Hash and save new password
+  account.password = await bcrypt.hash(newPassword, 10);
+  await account.save();
+
+  res.status(200).json({ message: "Password changed successfully" });
+});

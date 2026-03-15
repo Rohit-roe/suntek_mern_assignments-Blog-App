@@ -3,8 +3,8 @@ import RootLayout from "./components/RootLayout";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
-import UserDashboard from "./components/UserDashboard";
-import AuthorDashboard from "./components/AuthorDashboard";
+import UserProfile from "./components/UserProfile";
+import AuthorProfile from "./components/AuthorProfile";
 import ArticleByID from "./components/ArticleByID";
 import AuthorArticles from "./components/AuthorArticles";
 import WriteArticle from "./components/WriteArticle";
@@ -32,11 +32,11 @@ function App() {
         },
         {
           path: "user-profile",
-          element: <UserDashboard />,
+          element: <UserProfile />,
         },
         {
           path: "author-profile",
-          element: <AuthorDashboard />,
+          element: <AuthorProfile />,
           children: [
             {
               index: true,

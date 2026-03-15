@@ -15,7 +15,7 @@ import {
   timestampClass,
 } from "../styles/common.js";
 
-function UserDashboard() {
+function UserProfile() {
   const logout = useAuth((state) => state.logout);
   const navigate = useNavigate();
 
@@ -100,4 +100,4 @@ function UserDashboard() {
   );
 }
 
-export default UserDashboard;
+export default UserProfile;

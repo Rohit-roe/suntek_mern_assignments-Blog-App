@@ -36,11 +36,15 @@ function Login() {
 useEffect(() => {
   if (!isAuthenticated || !currentUser) return;
 
-  if (currentUser.role === "USER") {
+  // Convert role to uppercase for a safe comparison
+  const role = currentUser.role?.toUpperCase();
+
+  if (role === "USER") {
     toast.success("Logged in successfully");
     navigate("/user-profile");
   } 
-  else if (currentUser.role === "AUTHOR") {
+  else if (role === "AUTHOR") {
+    toast.success("Welcome Author!");
     navigate("/author-profile");
   }
 }, [isAuthenticated, currentUser, navigate]);

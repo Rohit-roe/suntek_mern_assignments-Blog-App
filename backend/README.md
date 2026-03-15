@@ -1,30 +1,28 @@
-### Backend Development
+### Backend development
 
-1.create git repo
+1. Create git repo
     git init
 
-2.Add a gitignore file
+2. Add .gitignore file
 
-3. create .env for environment variables &read data from .env with "dotenv" module
-npm i dotenv
+3. Create .env file for environment variables & Read data from .env   
+   with "dotenv" module
+    npm install dotenv
 
-4. Generate package.json-npm init -y
+4. Generate package.json
 
-5. create express app-npm i express
+5. Create express app
 
-6.install mongoose
+6. Connect to Database
 
-6.connect to database
+7. Add middlewares( body parser, err handling middlewares)
 
-7. Add middlewares(body parser,err handling )
-
-8. Design schemas and create models(blog user,articles)
+8. Design Schemas and create models
 
 9. Design REST APIs for all resources
 
-10. create a services folder which consists of functions that can be used by various APIs
+### Registration & Login
 
-whenever a request is made the cookies are attached automatically
-they are forwarded automatically at every request
+10. Registration & Login in common for USER & AUTHOR. Create a seperate service to reuse
 
-template literals is '``' they can be used to print the variables directly 
+11. The Client wont send role. It just redirects to a specific API based on role selection. The hardcoded role assigned by API routes.

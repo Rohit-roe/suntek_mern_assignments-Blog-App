@@ -52,27 +52,27 @@ export const useAuth = create((set) => ({
       });
     }
   },
-//   // restore login
-//   checkAuth: async () => {
-//     try {
-//       const res = await axios.get("http://localhost:4000/common-api/check-auth", { withCredentials: true });
+  // restore login
+  checkAuth: async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/common-api/check-auth", { withCredentials: true });
 
-//       set({
-//         user: res.data.payload,
-//         isAuthenticated: true,
-//       });
-//     } catch (err) {
-//       // If user is not logged in → do nothing
-//       if (err.response?.status === 401) {
-//         set({
-//           user: null,
-//           isAuthenticated: false,
-//         });
-//         return;
-//       }
+      set({
+        user: res.data.payload,
+        isAuthenticated: true,
+      });
+    } catch (err) {
+      // If user is not logged in → do nothing
+      if (err.response?.status === 401) {
+        set({
+          user: null,
+          isAuthenticated: false,
+        });
+        return;
+      }
 
-//       // other errors
-//       console.error("Auth check failed:", err);
-//     }
-//   },
+      // other errors
+      console.error("Auth check failed:", err);
+    }
+  },
 }));

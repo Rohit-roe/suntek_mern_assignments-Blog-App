@@ -7,7 +7,7 @@ import {
   divider,
 } from "../styles/common";
 
-function AuthorDashboard() {
+function AuthorProfile() {
   return (
     <div className={pageWrapper}>
       
@@ -43,4 +43,4 @@ function AuthorDashboard() {
   );
 }
 
-export default AuthorDashboard;
+export default AuthorProfile;
