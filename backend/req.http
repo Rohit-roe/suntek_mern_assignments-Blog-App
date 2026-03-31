@@ -1,0 +1,27 @@
+###----------------------
+### login without needing the role
+POST http://localhost:4000/common-api/login
+Content-Type: application/json
+
+{
+    "email":"rohit.author@gmail.com",
+    "password":"rohit123",
+    "role":"AUTHOR"
+}
+
+
+###logout 
+GET http://localhost:4000/common-api/logout
+
+###test req
+GET http://localhost:4000/test
+
+###change password!
+PUT http://localhost:4000/common-api/change-password
+Content-Type: application/json
+
+{
+    "email":"test@gmail.com",
+    "oldPassword":"test123",
+    "newPassword":"test12345"
+}
