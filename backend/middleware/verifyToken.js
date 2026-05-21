@@ -6,7 +6,6 @@ export const verifyToken = (...allowedRoles) => {
     return async (req, res, next) => {
         // read token from cookies
         const token = req.cookies.token
-        console.log("token:", token)
 
         if (!token) {
             return res.status(401).json({

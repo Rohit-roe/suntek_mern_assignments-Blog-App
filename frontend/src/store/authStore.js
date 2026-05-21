@@ -18,8 +18,8 @@ export const useAuth = create(
           // Route to the correct login endpoint based on role
           const endpoint =
             role === 'ADMIN'
-              ? 'http://localhost:4000/admin-api/authenticate'
-              : 'http://localhost:4000/common-api/login'
+              ? `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/admin-api/authenticate`
+              : `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/common-api/login`
 
           const res = await axios.post(endpoint, userCredObj, {
             withCredentials: true,
@@ -44,7 +44,7 @@ export const useAuth = create(
         try {
           set({ loading: true, error: null })
 
-          await axios.get('http://localhost:4000/common-api/logout', {
+          await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/common-api/logout`, {
             withCredentials: true,
           })
 
@@ -68,7 +68,7 @@ export const useAuth = create(
           set({ loading: true, error: null })
 
           const resObj = await axios.get(
-            'http://localhost:4000/common-api/check-auth',
+            `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/common-api/check-auth`,
             { withCredentials: true }
           )
 

@@ -31,7 +31,7 @@ function AuthorDashboard() {
     async function getArticles() {
       setLoading(true);
       try {
-        let res = await axios.get(`http://localhost:4000/author-api/article`, { withCredentials: true });
+        let res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/author-api/article`, { withCredentials: true });
         setArticles(res.data.payload);
       } catch (err) {
         setError(err.message);

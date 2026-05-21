@@ -21,11 +21,12 @@ function Register() {
     let { role, profileImageURL, ...userObj } = formObj
     Object.keys(userObj).forEach((key) => formData.append(key, userObj[key]))
     formData.append("profileImage", profileImageURL[0])
+    formData.append("role", role);
 
     try {
-      const endpoint = role === 'author'
-        ? "http://localhost:4000/author-api/users"
-        : "http://localhost:4000/user-api/users"
+      const endpoint = role === 'AUTHOR'
+        ? `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/author-api/users`
+        : `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/user-api/users`
 
       const resObj = await axios.post(endpoint, formData)
       if (resObj.status === 201) navigate('/login')
@@ -61,8 +62,8 @@ function Register() {
               <span className={labelClass}>I want to</span>
               <div className="flex gap-3">
                 {[
-                  { value: 'user', label: 'Read', icon: '📖' },
-                  { value: 'author', label: 'Write', icon: '✍️' },
+                  { value: 'USER', label: 'Read', icon: '📖' },
+                  { value: 'AUTHOR', label: 'Write', icon: '✍️' },
                 ].map(({ value, label, icon }) => (
                   <label
                     key={value}

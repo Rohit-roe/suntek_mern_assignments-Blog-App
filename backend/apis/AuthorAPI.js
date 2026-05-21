@@ -3,17 +3,39 @@ import { register, authenticate } from '../services/authService.js'
 import { ArticleModel } from "../models/ArticleModel.js"
 import { verifyToken } from '../middleware/verifyToken.js'
 import { Types } from 'mongoose'
+import { uploadToCloudinary } from '../config/cloudinaryUpload.js'
+import { upload } from '../config/multer.js'
+import cloudinary from '../config/cloudinary.js'
 
 export const authorApp = exp.Router()
 
 //register author - public
-authorApp.post('/users', async (req, res) => {
-    //get the user obj from the req body
-    let userObj = req.body
-    //call the register function
-    const newUserObj = await register({ ...userObj, role: "AUTHOR" })
-    //role - make the backend/server to decide the role, dont allow the client to decide this........
-    res.status(201).json({ message: "user created", payload: newUserObj })
+authorApp.post('/users', upload.single("profileImage"), async (req, res, next) => {
+    let cloudinaryResult;
+    try {
+        //get the user obj from the req body
+        let userObj = req.body
+        
+        // Step 1: upload image to cloudinary from memoryStorage (if exists)
+        if (req.file) {
+            cloudinaryResult = await uploadToCloudinary(req.file.buffer);
+        }
+
+        //call the register function
+        const newUserObj = await register({ 
+            ...userObj, 
+            role: "AUTHOR",
+            profileImageURL: cloudinaryResult?.secure_url,
+        })
+        //role - make the backend/server to decide the role, dont allow the client to decide this........
+        res.status(201).json({ message: "user created", payload: newUserObj })
+    } catch (err) {
+        // Step 3: rollback 
+        if (cloudinaryResult?.public_id) {
+            await cloudinary.uploader.destroy(cloudinaryResult.public_id);
+        }
+        next(err); // send to your error middleware
+    }
 })
 
 // //authenticate - public

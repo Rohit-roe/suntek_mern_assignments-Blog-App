@@ -26,7 +26,7 @@ function ArticleById() {
     setCommenting(true)
     try {
       const res = await axios.put(
-        "http://localhost:4000/user-api/users",
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/user-api/users`,
         { userId: user._id || user.id, articleId: article._id, comments: data.comment },
         { withCredentials: true }
       )
@@ -45,7 +45,7 @@ function ArticleById() {
       if (location.state?.article) { setArticle(location.state.article); return }
       try {
         setLoading(true)
-        const res = await axios.get(`http://localhost:4000/author-api/article/${id}`, { withCredentials: true })
+        const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/author-api/article/${id}`, { withCredentials: true })
         setArticle(res.data.payload)
       } catch (err) {
         setError(err.message)
@@ -61,7 +61,7 @@ function ArticleById() {
     if (!window.confirm(newStatus ? "Restore this article?" : "Delete this article?")) return
     try {
       const res = await axios.patch(
-        `http://localhost:4000/author-api/articles/${id}/status`,
+        `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/author-api/articles/${id}/status`,
         { isArticleActive: newStatus },
         { withCredentials: true }
       )

@@ -24,7 +24,7 @@ function UserDashboard() {
     async function getArticles() {
       setLoading(true);
       try {
-        let res = await axios.get("http://localhost:4000/user-api/users", { withCredentials: true })
+        let res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/user-api/users`, { withCredentials: true })
         setArticles(res.data.payload)
       } catch (err) {
         setError(err.message)

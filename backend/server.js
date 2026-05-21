@@ -13,7 +13,17 @@ config() //process.env
 
 const app = exp()
 //use cors middleware
-app.use(cors({ origin: ['http://localhost:5173'],credentials:true }))
+const allowedOrigins = ['http://localhost:5173', process.env.FRONTEND_URL].filter(Boolean);
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin) || origin.includes('vercel.app')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 app.use(exp.json())//body parser json
 //add cookie parser middleware 
 app.use(cookieParser())
