@@ -1,3 +1,7 @@
+# Blog Management System
+
+**Demo Link:** [https://suntek-mern-assignments-blog-app.vercel.app](https://suntek-mern-assignments-blog-app.vercel.app)
+
 A robust, multi-role Blog Management System built using the MERN stack (MongoDB, Express.js, React, Node.js). This application features secure authentication, role-based access control, and seamless media management for high-quality content creation.
 
 Key Features
