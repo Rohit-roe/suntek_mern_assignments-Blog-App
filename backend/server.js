@@ -43,7 +43,7 @@ const connectDB = async () => {
         //start http server
         app.listen(process.env.PORT, () => console.log("server started!"))
     } catch (err) {
-        console.log("error occurred")
+        console.log("Database connection error:", err)
     }
 }
 connectDB()
