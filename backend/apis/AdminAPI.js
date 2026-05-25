@@ -16,8 +16,8 @@ adminApp.post('/authenticate', async (req, res) => {
     //save the token as a httponly cookie
     res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax"
+        secure: true,
+        sameSite: "none"
     })
     //send the res
     res.status(200).json({ message: "admin logged in!", payload: admin })

@@ -14,8 +14,8 @@ commonApp.post('/login', async (req, res) => {
     //save the token as a httponly cookie
     res.cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax"
+        secure: true,
+        sameSite: "none"
     })
     //send the res
     res.status(200).json({ message: "logged in successfully!", payload: user })
@@ -25,8 +25,8 @@ commonApp.get('/logout', async (req, res) => {
     //clear the cookie named 'token'
     res.clearCookie('token', {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax"
+        secure: true,
+        sameSite: "none"
     })
     res.status(200).json({ message: "logged out successfully" })
 })
